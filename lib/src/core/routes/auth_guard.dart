@@ -1,24 +1,23 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:lanars/src/core/routes/app_router.dart';
+import 'package:lanars/src/feature/auth/logic/auth_interceptor.dart';
+import 'package:lanars/src/feature/initialization/widget/dependencies_scope.dart';
 
 class AuthGuard extends AutoRouteGuard {
+  const AuthGuard({
+    required this.context,
+  });
+
+  final BuildContext context;
+
   @override
   void onNavigation(NavigationResolver resolver, StackRouter router) {
-    if (true) {
-      //   if user is authenticated we continue
+    final isAuth = DependenciesScope.of(context).authBloc.state.status;
+    if (isAuth == AuthenticationStatus.authenticated) {
       resolver.next(true);
+    } else {
+      resolver.redirect(const LoginRoute());
     }
-    // } else {
-    //   we redirect the user to our login page
-    //   tip: use resolver.redirect to have the redirected route
-    //   automatically removed from the stack when the resolver is completed
-    // resolver.redirect(
-    //     LoginRoute(onResult: (success) {
-    //       if success == true the navigation will be resumed
-    //       else it will be aborted
-    // resolver.next(success);
-    // },
-    // );
-    // );
-    // }
   }
 }

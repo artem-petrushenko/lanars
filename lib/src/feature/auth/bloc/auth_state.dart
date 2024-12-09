@@ -26,6 +26,9 @@ sealed class AuthState {
         final _AuthStateFailure e => e.error,
         _ => null,
       };
+
+  /// Get loading is state is processing
+  bool get isLoading => this is _AuthStateProcessing;
 }
 
 final class _AuthStateIdle extends AuthState {

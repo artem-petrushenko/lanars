@@ -1,5 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:lanars/src/core/routes/app_router.dart';
+import 'package:lanars/src/feature/documents/widget/document_drawer.dart';
+import 'package:lanars/src/feature/settings/widget/settings_scope.dart';
 
 @RoutePage()
 class DocumentScreen extends StatelessWidget {
@@ -8,8 +11,8 @@ class DocumentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const Drawer(
-        child: Text('1'),
+      drawer: Drawer(
+        child: DocumentDrawer(),
       ),
       appBar: AppBar(
         leading: Builder(builder: (context) {

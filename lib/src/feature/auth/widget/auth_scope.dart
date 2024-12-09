@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lanars/src/core/utils/extensions/context_extension.dart';
 import 'package:lanars/src/feature/auth/bloc/auth_bloc.dart';
 import 'package:lanars/src/feature/auth/logic/auth_interceptor.dart';
+import 'package:lanars/src/feature/initialization/widget/dependencies_scope.dart';
 
 /// Auth controller
 abstract interface class AuthController {
@@ -39,8 +40,8 @@ class _AuthScopeState extends State<AuthScope> implements AuthController {
   @override
   void initState() {
     super.initState();
-    // _authBloc = DependenciesScope.of(context).authBloc;
-    // _state = _authBloc.state;
+    _authBloc = DependenciesScope.of(context).authBloc;
+    _state = _authBloc.state;
   }
 
   @override

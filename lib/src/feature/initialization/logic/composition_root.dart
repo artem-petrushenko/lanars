@@ -1,4 +1,12 @@
+import 'package:dio/dio.dart';
 import 'package:lanars/src/core/utils/logger/refined_logger.dart';
+import 'package:lanars/src/core/utils/rest_api/base_rest_api.dart';
+import 'package:lanars/src/feature/auth/bloc/auth_bloc.dart';
+import 'package:lanars/src/feature/auth/data/data_provider/auth_data_source.dart';
+import 'package:lanars/src/feature/auth/data/data_provider/user_storage_sp.dart';
+import 'package:lanars/src/feature/auth/data/entity/user_entity.dart';
+import 'package:lanars/src/feature/auth/data/repository/auth_repository.dart';
+import 'package:lanars/src/feature/auth/logic/auth_interceptor.dart';
 import 'package:lanars/src/feature/initialization/model/dependencies.dart';
 import 'package:lanars/src/feature/settings/bloc/settings_bloc.dart';
 import 'package:lanars/src/feature/settings/data/text_scale_datasource.dart';
@@ -41,66 +49,22 @@ final class CompositionRoot {
   }
 
   Future<Dependencies> _initDependencies() async {
-    // const baseUrl = 'https://sndrosycldxwwasrweoe.supabase.co';
-    // final baseClient = Client();
+    final dio = Dio();
     final sharedPreferences = await SharedPreferences.getInstance();
     final settingsBloc = await _initSettingsBloc(sharedPreferences);
-    // final storage = TokenStorageSP(sharedPreferences: sharedPreferences);
-    // final token = await storage.load();
-    //
-    // final packageInfo = await PackageInfo.fromPlatform();
-    // AppConfig(packageInfo.packageName);
-    //
-    // final clientWithoutInterceptor = RestClientHTTP(
-    //   baseUrl: baseUrl,
-    //   client: baseClient,
-    // );
-    //
-    // final authInterceptor = AuthInterceptor(
-    //   tokenStorage: storage,
-    //   authorizationClient: JWTAuthorizationClient(clientWithoutInterceptor),
-    //   retryClient: baseClient,
-    //   token: token,
-    // );
-    //
-    // final interceptedClient = InterceptedClient(
-    //   inner: baseClient,
-    //   interceptors: [authInterceptor],
-    // );
-    //
-    // final clientWithAuthInterceptor = RestClientHTTP(
-    //   baseUrl: baseUrl,
-    //   client: interceptedClient,
-    // );
-    //
-    // final authRepository = await _initAuthRepository(
-    //   client: clientWithoutInterceptor,
-    //   storage: storage,
-    // );
-    // final authBloc = await _initAuthBloc(
-    //   token: token,
-    //   authRepository: authRepository,
-    // );
-    //
-    // final userBloc = await _initUserBloc(
-    //   storage: storage,
-    //   client: clientWithAuthInterceptor,
-    //   authRepository: authRepository,
-    //   token: token,
-    // );
-    //
-    // final pokemonRepository = PokemonRepositoryImpl(
-    //   PokemonDataSourceNetwork(client: clientWithAuthInterceptor),
-    // );
-    //
-    // final boardingRepository = BoardingRepositoryImpl(
-    //   firstRunAppStorage: FirstRunAppStorageSP(
-    //     sharedPreferences: sharedPreferences,
-    //   ),
-    // );
+    final storage = UserStorageSP(sharedPreferences: sharedPreferences);
+    final user = await storage.load();
+    final authRepository = await _initAuthRepository(
+      client: dio,
+      storage: storage,
+    );
+    final authBloc = await _initAuthBloc(
+      authRepository: authRepository,
+      user: user,
+    );
     return Dependencies(
       settingsBloc: settingsBloc,
-      // authBloc: authBloc,
+      authBloc: authBloc,
     );
   }
 
@@ -132,57 +96,31 @@ final class CompositionRoot {
     return settingsBloc;
   }
 
-  // Future<AuthBloc> _initAuthBloc({
-  //   required AuthRepository authRepository,
-  //   Token? token,
-  // }) async {
-  //   final authBloc = AuthBloc(
-  //     AuthState.idle(
-  //       status: token != null ? AuthenticationStatus.authenticated : AuthenticationStatus.unauthenticated,
-  //     ),
-  //     authRepository: authRepository,
-  //   );
-  //   return authBloc;
-  // }
-  //
-  // Future<UserBloc> _initUserBloc({
-  //   required TokenStorage storage,
-  //   required RestClient client,
-  //   required AuthRepository authRepository,
-  //   Token? token,
-  // }) async {
-  //   final userRepository = UserRepositoryImpl(
-  //     dataSource: UserDataSourceNetwork(
-  //       client: client,
-  //     ),
-  //   );
-  //   UserEntity user = UserEntity.notAuthenticated();
-  //   try {
-  //     if (token != null) user = await userRepository.fetchUser();
-  //   } on Object catch (e, st) {
-  //     logger.error(
-  //       'Failed to fetch user',
-  //       error: e,
-  //       stackTrace: st,
-  //     );
-  //   }
-  //   final userBloc = UserBloc(
-  //     user: user,
-  //     authRepository: authRepository,
-  //     userRepository: userRepository,
-  //   );
-  //   return userBloc;
-  // }
-  //
-  // Future<AuthRepository> _initAuthRepository({
-  //   required RestClient client,
-  //   required TokenStorage storage,
-  // }) async {
-  //   final dataSource = AuthDataSourceNetwork(client: client);
-  //   final authRepository = AuthRepositoryImpl(
-  //     dataSource: dataSource,
-  //     storage: storage,
-  //   );
-  //   return authRepository;
-  // }
+  Future<AuthBloc> _initAuthBloc({
+    required AuthRepository authRepository,
+    required UserEntity user,
+  }) async {
+    final authBloc = AuthBloc(
+      AuthState.idle(
+        status: user.isAuthenticated ? AuthenticationStatus.authenticated : AuthenticationStatus.unauthenticated,
+      ),
+      authRepository: authRepository,
+    );
+    return authBloc;
+  }
+
+  Future<AuthRepository> _initAuthRepository({
+    required Dio client,
+    required UserStorage storage,
+  }) async {
+    final dataSource = AuthDataSource(
+      client,
+      baseUrl: BaseRestApi.authBaseUrl,
+    );
+    final authRepository = AuthRepositoryImpl(
+      dataSource: dataSource,
+      storage: storage,
+    );
+    return authRepository;
+  }
 }

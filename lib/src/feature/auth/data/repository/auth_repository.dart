@@ -1,11 +1,12 @@
 import 'package:lanars/src/feature/auth/data/data_provider/auth_data_source.dart';
-import 'package:lanars/src/feature/auth/data/data_provider/token_storage_sp.dart';
+import 'package:lanars/src/feature/auth/data/data_provider/user_storage_sp.dart';
+import 'package:lanars/src/feature/auth/data/entity/user_entity.dart';
 import 'package:lanars/src/feature/auth/logic/auth_interceptor.dart';
 
 /// AuthRepository
 abstract interface class AuthRepository implements AuthStatusSource {
   /// Sign in with email and password
-  Future<Token> signInWithEmailAndPassword(String email, String password);
+  Future<AuthenticatedUserEntity> signInWithEmailAndPassword(String email, String password);
 
   /// Sign out
   Future<void> signOut();
@@ -14,34 +15,38 @@ abstract interface class AuthRepository implements AuthStatusSource {
 /// AuthRepositoryImpl
 final class AuthRepositoryImpl implements AuthRepository {
   final AuthDataSource _dataSource;
-  final TokenStorage _storage;
+  final UserStorage _storage;
 
   /// Create an [AuthRepositoryImpl]
   const AuthRepositoryImpl({
     required AuthDataSource dataSource,
-    required TokenStorage storage,
+    required UserStorage storage,
   })  : _dataSource = dataSource,
         _storage = storage;
 
   @override
-  Future<Token> signInWithEmailAndPassword(
+  Future<AuthenticatedUserEntity> signInWithEmailAndPassword(
     String email,
     String password,
   ) async {
-    final token = await _dataSource.signInWithEmailAndPassword(email, password);
-    await _storage.save(token);
+    final result = await _dataSource.signInWithEmailAndPassword(data: {
+      'email': email,
+      'password': password,
+    });
+    final user = result.results.first;
+    await _storage.save(user);
 
-    return token;
+    return user;
   }
 
   @override
   Future<void> signOut() async {
-    await _dataSource.signOut();
+    // await _dataSource.signOut();
     await _storage.clear();
   }
 
   @override
   Stream<AuthenticationStatus> get authStatus => _storage.getStream().map(
-        (token) => token != null ? AuthenticationStatus.authenticated : AuthenticationStatus.unauthenticated,
+        (user) => user.isAuthenticated ? AuthenticationStatus.authenticated : AuthenticationStatus.unauthenticated,
       );
 }

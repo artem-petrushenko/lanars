@@ -1,5 +1,11 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lanars/src/common/widget/text/default_text.dart';
+import 'package:lanars/src/feature/auth/bloc/auth_bloc.dart';
+import 'package:lanars/src/feature/auth/widget/auth_scope.dart';
+import 'package:lanars/src/feature/auth/widget/login_form.dart';
+import 'package:lanars/src/feature/initialization/widget/dependencies_scope.dart';
 
 /// {@template login_screen}
 /// LoginScreen widget
@@ -16,6 +22,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   late final TextEditingController _passwordController;
   late final TextEditingController _emailController;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -33,99 +40,67 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
-          // padding: ScreenPadding.of(context, 468),
+    return BlocListener<AuthBloc, AuthState>(
+      bloc: DependenciesScope.of(context).authBloc,
+      listener: (context, AuthState state) {
+        if (state.error != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Server error. Please, try again'),
+              action: SnackBarAction(
+                label: 'Close',
+                onPressed: () {
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                },
+              ),
+            ),
+          );
+        }
+      },
+      child: Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(
-                height: 48,
-                child: TextField(
-                  controller: _emailController,
-                  decoration: const InputDecoration(
-                    hintText: 'Email',
-                  ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 72.0),
+                child: DefaultText.headlineLarge(
+                  'Sign in',
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
-              _PasswordTextField(controller: _passwordController),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 24),
-                child: SizedBox(
-                  height: 48,
-                  child: FilledButton(
-                    onPressed: () {
-                      // AuthScope.of(context).signInWithEmailAndPassword(
-                      //   _emailController.text,
-                      //   _passwordController.text,
-                      // );
-                    },
-                    child: const Text(
-                      'Sign in',
-                    ),
-                  ),
+              LoginForm(
+                formKey: _formKey,
+                emailController: _emailController,
+                passwordController: _passwordController,
+                enable: !DependenciesScope.of(context).authBloc.state.isLoading,
+              ),
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      AuthScope.of(context).signInWithEmailAndPassword(
+                        _emailController.text,
+                        _passwordController.text,
+                      );
+                    }
+                  },
+                  child: DependenciesScope.of(context).authBloc.state.isLoading
+                      ? SizedBox.square(
+                          dimension: 24.0,
+                          child: CircularProgressIndicator(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
+                        )
+                      : const Text('Sign in'),
                 ),
               ),
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-/// {@template password_text_field}
-/// _PasswordTextField widget
-/// {@endtemplate}
-class _PasswordTextField extends StatefulWidget {
-  /// {@macro password_text_field}
-  const _PasswordTextField({
-    required this.controller,
-  });
-
-  final TextEditingController controller;
-
-  @override
-  State<_PasswordTextField> createState() => _PasswordTextFieldState();
-}
-
-class _PasswordTextFieldState extends State<_PasswordTextField> {
-  final ValueNotifier<bool> _obscureText = ValueNotifier(true);
-
-  @override
-  void dispose() {
-    _obscureText.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return SizedBox(
-      height: 48,
-      child: ValueListenableBuilder(
-        valueListenable: _obscureText,
-        builder: (BuildContext context, bool obscureText, Widget? child) {
-          return TextField(
-            controller: widget.controller,
-            obscureText: obscureText,
-            decoration: InputDecoration(
-              hintText: 'Password',
-              suffixIcon: IconButton(
-                icon: Icon(
-                  obscureText ? Icons.visibility_off : Icons.visibility,
-                  color: theme.colorScheme.onSurface,
-                ),
-                onPressed: () {
-                  _obscureText.value = !_obscureText.value;
-                },
-              ),
-            ),
-          );
-        },
       ),
     );
   }

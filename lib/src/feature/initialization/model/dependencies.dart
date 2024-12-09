@@ -12,14 +12,14 @@ base class Dependencies {
   /// {@macro dependencies}
   const Dependencies({
     required this.settingsBloc,
-    // required this.authBloc,
+    required this.authBloc,
   });
 
   /// [SettingsBloc] instance, used to manage theme and locale.
   final SettingsBloc settingsBloc;
 
   /// [AuthBloc] instance, used to manage authentication.
-  // final AuthBloc authBloc;
+  final AuthBloc authBloc;
 }
 
 /// {@template composition_result}

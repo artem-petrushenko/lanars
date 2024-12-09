@@ -1,24 +1,27 @@
 import 'package:lanars/src/feature/auth/data/entity/user_entity.dart';
 import 'package:meta/meta.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'user_dto.g.dart';
 @immutable
+@JsonSerializable()
 class AuthenticatedUserDTO extends AuthenticatedUserEntity {
   const AuthenticatedUserDTO({
-    required super.id,
+    required super.gender,
   });
 
   @override
-  String toString() => 'Authenticated user with id: $id';
+  String toString() => 'Authenticated user with gender: $gender';
 
   @override
   bool operator ==(final Object other) => other is AuthenticatedUserDTO;
 
   @override
-  int get hashCode => id.hashCode;
+  int get hashCode => gender.hashCode;
 
-  factory AuthenticatedUserDTO.fromJson(Map<String, dynamic> json) => AuthenticatedUserDTO(
-        id: json['id'] as String,
-      );
+  factory AuthenticatedUserDTO.fromJson(Map<String, dynamic> json) => _$AuthenticatedUserDTOFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AuthenticatedUserDTOToJson(this);
 }
 
 @immutable

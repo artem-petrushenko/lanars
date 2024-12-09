@@ -1,13 +1,50 @@
 import 'package:flutter/material.dart';
 
 ThemeData _createThemeData(
-  ColorScheme brightness,
+  ColorScheme colorScheme,
 ) =>
     ThemeData(
-      useMaterial3: true,
-      colorScheme: brightness,
+      // useMaterial3: false,
+      colorScheme: colorScheme,
       appBarTheme: const AppBarTheme(
         centerTitle: true,
+      ),
+      inputDecorationTheme:  InputDecorationTheme(
+        border: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: colorScheme.onSurface,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: colorScheme.primary,
+          ),
+        ),
+        enabledBorder: OutlineInputBorder(),
+        errorBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: colorScheme.error,
+          ),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: colorScheme.error,
+          ),
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: colorScheme.outline,
+          ),
+        ),
+      ),
+      snackBarTheme: const SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+      ),
+      textTheme: const TextTheme(
+        headlineLarge: TextStyle(
+          fontSize: 32.0,
+          fontWeight: FontWeight.w400,
+        ),
       ),
     );
 

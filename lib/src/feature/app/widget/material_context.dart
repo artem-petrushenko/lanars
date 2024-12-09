@@ -14,7 +14,7 @@ class MaterialContext extends StatelessWidget {
 
     final mediaQueryData = MediaQuery.of(context);
 
-    final appRouter = AppRouter();
+    final appRouter = AppRouter(context: context);
     return MaterialApp.router(
       routerConfig: appRouter.config(),
       theme: theme.lightTheme,

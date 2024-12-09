@@ -8,9 +8,9 @@ abstract class UserEntity {
   factory UserEntity.notAuthenticated() => const NotAuthenticatedUserEntity();
 
   factory UserEntity.authenticated({
-    required final String id,
+    required final String gender,
   }) =>
-      AuthenticatedUserEntity(id: id);
+      AuthenticatedUserEntity(gender: gender);
 
   T when<T extends Object?>({
     required final T Function(AuthenticatedUserEntity user) authenticated,
@@ -20,10 +20,10 @@ abstract class UserEntity {
 
 class AuthenticatedUserEntity extends UserEntity {
   const AuthenticatedUserEntity({
-    required this.id,
+    required this.gender,
   });
 
-  final String id;
+  final String gender;
 
   @override
   bool get isAuthenticated => !isNotAuthenticated;
