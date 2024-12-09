@@ -6,6 +6,9 @@ ThemeData _createThemeData(
     ThemeData(
       useMaterial3: true,
       colorScheme: brightness,
+      appBarTheme: const AppBarTheme(
+        centerTitle: true,
+      ),
     );
 
 ThemeData get createDarkTheme => _createThemeData(darkColorScheme);

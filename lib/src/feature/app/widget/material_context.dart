@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lanars/src/core/routes/app_router.dart';
 import 'package:lanars/src/feature/settings/widget/settings_scope.dart';
 
 class MaterialContext extends StatelessWidget {
@@ -13,7 +14,9 @@ class MaterialContext extends StatelessWidget {
 
     final mediaQueryData = MediaQuery.of(context);
 
-    return MaterialApp(
+    final appRouter = AppRouter();
+    return MaterialApp.router(
+      routerConfig: appRouter.config(),
       theme: theme.lightTheme,
       darkTheme: theme.darkTheme,
       themeMode: theme.mode,

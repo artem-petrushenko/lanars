@@ -1,8 +1,10 @@
+import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 
 /// {@template login_screen}
 /// LoginScreen widget
 /// {@endtemplate}
+@RoutePage()
 class LoginScreen extends StatefulWidget {
   /// {@macro login_screen}
   const LoginScreen({super.key});
