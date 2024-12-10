@@ -37,6 +37,7 @@ class EmailTextField extends StatelessWidget {
         textInputAction: TextInputAction.next,
         onChanged: onChanged,
         onTap: onTap,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
       ),
     );
   }

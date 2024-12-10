@@ -60,6 +60,7 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
         onChanged: widget.onChanged,
         textInputAction: TextInputAction.next,
         onTap: widget.onTap,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
       ),
     );
   }
