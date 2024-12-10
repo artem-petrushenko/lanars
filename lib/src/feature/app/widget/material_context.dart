@@ -3,9 +3,13 @@ import 'package:lanars/src/core/routes/app_router.dart';
 import 'package:lanars/src/feature/settings/widget/settings_scope.dart';
 
 class MaterialContext extends StatelessWidget {
-  const MaterialContext({super.key});
+  const MaterialContext({
+    super.key,
+    required this.appRouter,
+  });
 
   static final _globalKey = GlobalKey();
+  final AppRouter appRouter;
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +18,6 @@ class MaterialContext extends StatelessWidget {
 
     final mediaQueryData = MediaQuery.of(context);
 
-    final appRouter = AppRouter(context: context);
     return MaterialApp.router(
       routerConfig: appRouter.config(),
       theme: theme.lightTheme,

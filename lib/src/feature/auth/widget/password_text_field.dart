@@ -12,11 +12,15 @@ class PasswordTextField extends StatefulWidget {
     required this.controller,
     this.readOnly = false,
     this.enable = true,
+    this.onChanged,
+    this.onTap,
   });
 
   final TextEditingController controller;
   final bool readOnly;
   final bool enable;
+  final void Function(String)? onChanged;
+  final void Function()? onTap;
 
   @override
   State<PasswordTextField> createState() => _PasswordTextFieldState();
@@ -53,6 +57,9 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
         decoration: const InputDecoration(
           labelText: 'Password',
         ),
+        onChanged: widget.onChanged,
+        textInputAction: TextInputAction.next,
+        onTap: widget.onTap,
       ),
     );
   }

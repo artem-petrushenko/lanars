@@ -45,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return BlocListener<AuthBloc, AuthState>(
       bloc: DependenciesScope.of(context).authBloc,
       listener: (context, AuthState state) {
-        if(state.user.isAuthenticated) {
+        if (state.user.isAuthenticated) {
           context.replaceRoute(const DocumentRoute());
         }
         if (state.error != null) {
@@ -87,6 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: FilledButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
+                      // _formKey.currentState!.save();
                       AuthScope.of(context).signInWithEmailAndPassword(
                         _emailController.text,
                         _passwordController.text,

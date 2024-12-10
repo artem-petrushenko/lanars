@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lanars/src/core/utils/emitter_mixin.dart';
 import 'package:lanars/src/feature/auth/data/entity/user_entity.dart';
 import 'package:lanars/src/feature/auth/data/repository/auth_repository.dart';
 
@@ -8,7 +7,7 @@ part 'auth_event.dart';
 part 'auth_state.dart';
 
 /// AuthBloc
-final class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
+final class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepository;
 
   /// Create an [AuthBloc]

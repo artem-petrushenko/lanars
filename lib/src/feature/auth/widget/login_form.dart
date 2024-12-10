@@ -10,6 +10,8 @@ class LoginForm extends StatefulWidget {
     required this.passwordController,
     this.readOnly = false,
     this.enable = true,
+    this.onChanged,
+    this.onTap,
   });
 
   final GlobalKey formKey;
@@ -17,6 +19,8 @@ class LoginForm extends StatefulWidget {
   final TextEditingController passwordController;
   final bool readOnly;
   final bool enable;
+  final void Function(String)? onChanged;
+  final void Function()? onTap;
 
   @override
   State<LoginForm> createState() => _LoginFormState();
@@ -27,6 +31,7 @@ class _LoginFormState extends State<LoginForm> {
   Widget build(BuildContext context) {
     return Form(
       key: widget.formKey,
+      autovalidateMode: AutovalidateMode.disabled,
       child: AutofillGroup(
         child: Column(
           children: [
@@ -34,11 +39,13 @@ class _LoginFormState extends State<LoginForm> {
               controller: widget.emailController,
               readOnly: widget.readOnly,
               enable: widget.enable,
+
             ),
             PasswordTextField(
               controller: widget.passwordController,
               readOnly: widget.readOnly,
               enable: widget.enable,
+              onTap: widget.onTap,
             ),
           ],
         ),

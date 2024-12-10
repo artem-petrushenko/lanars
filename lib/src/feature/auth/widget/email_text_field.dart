@@ -8,12 +8,15 @@ class EmailTextField extends StatelessWidget {
     required this.controller,
     this.readOnly = false,
     this.enable = true,
+    this.onChanged,
+    this.onTap,
   });
 
   final TextEditingController controller;
   final bool readOnly;
   final bool enable;
-
+  final void Function()? onTap;
+  final void Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +34,9 @@ class EmailTextField extends StatelessWidget {
         ),
         readOnly: readOnly,
         autofillHints: const [AutofillHints.email],
+        textInputAction: TextInputAction.next,
+        onChanged: onChanged,
+        onTap: onTap,
       ),
     );
   }

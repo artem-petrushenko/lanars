@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lanars/src/core/routes/app_router.dart';
 import 'package:lanars/src/feature/app/widget/material_context.dart';
 import 'package:lanars/src/feature/auth/widget/auth_scope.dart';
 import 'package:lanars/src/feature/initialization/model/dependencies.dart';
@@ -16,9 +17,17 @@ class App extends StatelessWidget {
         dependencies: result.dependencies,
         child: SettingsScope(
           settingsBloc: result.dependencies.settingsBloc,
-          child: const AuthScope(
-            child: MaterialContext(),
+          child: AuthScope(
+            child: Builder(
+              builder: (context) {
+                return MaterialContext(
+                  appRouter: AppRouter(context: context),
+                );
+              }
+            ),
           ),
         ),
       );
 }
+
+
