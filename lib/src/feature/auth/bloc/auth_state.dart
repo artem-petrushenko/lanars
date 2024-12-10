@@ -2,22 +2,22 @@ part of 'auth_bloc.dart';
 
 /// States for [AuthBloc]
 sealed class AuthState {
-  const AuthState({required this.status});
+  const AuthState({required this.user});
 
   /// Status of the authentication
-  final AuthenticationStatus status;
+  final UserEntity user;
 
   /// Idle state, state machine is doing nothing
   const factory AuthState.idle({
-    required AuthenticationStatus status,
+    required UserEntity user,
   }) = _AuthStateIdle;
 
   const factory AuthState.processing({
-    required AuthenticationStatus status,
+    required UserEntity user,
   }) = _AuthStateProcessing;
 
   const factory AuthState.failure({
-    required AuthenticationStatus status,
+    required UserEntity user,
     required Object error,
   }) = _AuthStateFailure;
 
@@ -32,37 +32,37 @@ sealed class AuthState {
 }
 
 final class _AuthStateIdle extends AuthState {
-  const _AuthStateIdle({required super.status});
+  const _AuthStateIdle({required super.user});
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is _AuthStateIdle && other.status == status;
+    return other is _AuthStateIdle && other.user == user;
   }
 
   @override
-  int get hashCode => Object.hashAll([status]);
+  int get hashCode => Object.hashAll([user]);
 
   @override
-  String toString() => '_AuthStateIdle(status: $status)';
+  String toString() => '_AuthStateIdle(user: $user)';
 }
 
 final class _AuthStateProcessing extends AuthState {
-  const _AuthStateProcessing({required super.status});
+  const _AuthStateProcessing({required super.user});
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is _AuthStateProcessing && other.status == status;
+    return other is _AuthStateProcessing && other.user == user;
   }
 
   @override
-  int get hashCode => Object.hashAll([status]);
+  int get hashCode => Object.hashAll([user]);
 
   @override
-  String toString() => '_AuthStateProcessing(status: $status)';
+  String toString() => '_AuthStateProcessing(user: $user)';
 }
 
 final class _AuthStateFailure extends AuthState {
@@ -71,19 +71,19 @@ final class _AuthStateFailure extends AuthState {
 
   const _AuthStateFailure({
     required this.error,
-    required super.status,
+    required super.user,
   });
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is _AuthStateFailure && other.status == status && other.error == error;
+    return other is _AuthStateFailure && other.user == user && other.error == error;
   }
 
   @override
-  int get hashCode => Object.hashAll([status, error]);
+  int get hashCode => Object.hashAll([user, error]);
 
   @override
-  String toString() => '_AuthStateError(status: $status, message: $error)';
+  String toString() => '_AuthStateError(status: $user, message: $error)';
 }

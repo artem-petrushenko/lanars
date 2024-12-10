@@ -1,3 +1,6 @@
+import 'package:lanars/src/feature/auth/data/dto/picture_dto.dart';
+import 'package:lanars/src/feature/auth/data/dto/user_name_dto.dart';
+
 abstract class UserEntity {
   const UserEntity();
 
@@ -9,8 +12,16 @@ abstract class UserEntity {
 
   factory UserEntity.authenticated({
     required final String gender,
+    required final String email,
+    required final UserNameDto name,
+    required final PictureDto picture,
   }) =>
-      AuthenticatedUserEntity(gender: gender);
+      AuthenticatedUserEntity(
+        gender: gender,
+        email: email,
+        name: name,
+        picture: picture,
+      );
 
   T when<T extends Object?>({
     required final T Function(AuthenticatedUserEntity user) authenticated,
@@ -21,9 +32,16 @@ abstract class UserEntity {
 class AuthenticatedUserEntity extends UserEntity {
   const AuthenticatedUserEntity({
     required this.gender,
+    required this.email,
+    required this.name,
+    required this.picture,
   });
 
   final String gender;
+  final String email;
+  //TODO: How in codegen use entity?
+  final UserNameDto name;
+  final PictureDto picture;
 
   @override
   bool get isAuthenticated => !isNotAuthenticated;
@@ -37,19 +55,6 @@ class AuthenticatedUserEntity extends UserEntity {
     required final T Function() notAuthenticated,
   }) =>
       authenticated(this);
-
-  //TODO: Update the == operator and hashCode
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is UserEntity &&
-        other.isAuthenticated == isAuthenticated &&
-        other.isNotAuthenticated == isNotAuthenticated;
-  }
-
-  @override
-  int get hashCode => isAuthenticated.hashCode ^ isNotAuthenticated.hashCode;
 }
 
 class NotAuthenticatedUserEntity extends UserEntity {

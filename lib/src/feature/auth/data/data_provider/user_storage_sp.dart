@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:lanars/src/core/utils/preferences_dao.dart';
 import 'package:lanars/src/feature/auth/data/dto/user_dto.dart';
 import 'package:lanars/src/feature/auth/data/entity/user_entity.dart';
-import 'package:lanars/src/feature/auth/logic/auth_interceptor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract interface class UserStorage {
@@ -13,13 +12,6 @@ abstract interface class UserStorage {
   Future<void> save(AuthenticatedUserEntity user);
 
   Future<void> clear();
-
-  Stream<UserEntity> getStream();
-
-  /// Closes the storage.
-  ///
-  /// After this method is called, the storage should not be used anymore.
-  Future<void> close();
 }
 
 final class UserStorageSP implements UserStorage {
@@ -31,7 +23,6 @@ final class UserStorageSP implements UserStorage {
         );
 
   late final PreferencesEntry<String> _user;
-  final _streamController = StreamController<UserEntity>.broadcast();
 
   @override
   Future<UserEntity> load() async {
@@ -42,25 +33,16 @@ final class UserStorageSP implements UserStorage {
     }
     final json = jsonDecode(user);
     return AuthenticatedUserDTO.fromJson(json);
-
   }
 
   @override
   Future<void> save(AuthenticatedUserEntity user) async {
     final json = jsonEncode((user as AuthenticatedUserDTO).toJson());
     await _user.set(json);
-    _streamController.add(user);
   }
 
   @override
   Future<void> clear() async {
     await _user.remove();
-    _streamController.add(UserEntity.notAuthenticated());
   }
-
-  @override
-  Stream<UserEntity> getStream() => _streamController.stream;
-
-  @override
-  Future<void> close() => _streamController.close();
 }

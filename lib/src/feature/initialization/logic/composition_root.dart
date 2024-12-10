@@ -6,7 +6,6 @@ import 'package:lanars/src/feature/auth/data/data_provider/auth_data_source.dart
 import 'package:lanars/src/feature/auth/data/data_provider/user_storage_sp.dart';
 import 'package:lanars/src/feature/auth/data/entity/user_entity.dart';
 import 'package:lanars/src/feature/auth/data/repository/auth_repository.dart';
-import 'package:lanars/src/feature/auth/logic/auth_interceptor.dart';
 import 'package:lanars/src/feature/initialization/model/dependencies.dart';
 import 'package:lanars/src/feature/settings/bloc/settings_bloc.dart';
 import 'package:lanars/src/feature/settings/data/text_scale_datasource.dart';
@@ -101,9 +100,7 @@ final class CompositionRoot {
     required UserEntity user,
   }) async {
     final authBloc = AuthBloc(
-      AuthState.idle(
-        status: user.isAuthenticated ? AuthenticationStatus.authenticated : AuthenticationStatus.unauthenticated,
-      ),
+      AuthState.idle(user: user),
       authRepository: authRepository,
     );
     return authBloc;

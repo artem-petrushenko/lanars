@@ -1,7 +1,9 @@
 import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lanars/src/common/widget/text/default_text.dart';
+import 'package:lanars/src/core/routes/app_router.dart';
 import 'package:lanars/src/feature/auth/bloc/auth_bloc.dart';
 import 'package:lanars/src/feature/auth/widget/auth_scope.dart';
 import 'package:lanars/src/feature/auth/widget/login_form.dart';
@@ -43,10 +45,13 @@ class _LoginScreenState extends State<LoginScreen> {
     return BlocListener<AuthBloc, AuthState>(
       bloc: DependenciesScope.of(context).authBloc,
       listener: (context, AuthState state) {
+        if(state.user.isAuthenticated) {
+          context.replaceRoute(const DocumentRoute());
+        }
         if (state.error != null) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Server error. Please, try again'),
+              content: const Text('Server error. Please, try again'),
               action: SnackBarAction(
                 label: 'Close',
                 onPressed: () {

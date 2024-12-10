@@ -2,13 +2,13 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lanars/src/core/utils/extensions/context_extension.dart';
 import 'package:lanars/src/feature/auth/bloc/auth_bloc.dart';
-import 'package:lanars/src/feature/auth/logic/auth_interceptor.dart';
+import 'package:lanars/src/feature/auth/data/entity/user_entity.dart';
 import 'package:lanars/src/feature/initialization/widget/dependencies_scope.dart';
 
 /// Auth controller
 abstract interface class AuthController {
-  /// Authentication status
-  AuthenticationStatus get status;
+  /// Authentication user
+  UserEntity get user;
 
   /// Sign in with email and password
   void signInWithEmailAndPassword(String email, String password);
@@ -45,7 +45,7 @@ class _AuthScopeState extends State<AuthScope> implements AuthController {
   }
 
   @override
-  AuthenticationStatus get status => _state.status;
+  UserEntity get user => _state.user;
 
   @override
   void signInWithEmailAndPassword(

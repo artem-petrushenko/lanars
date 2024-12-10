@@ -1,10 +1,9 @@
 import 'package:lanars/src/feature/auth/data/data_provider/auth_data_source.dart';
 import 'package:lanars/src/feature/auth/data/data_provider/user_storage_sp.dart';
 import 'package:lanars/src/feature/auth/data/entity/user_entity.dart';
-import 'package:lanars/src/feature/auth/logic/auth_interceptor.dart';
 
 /// AuthRepository
-abstract interface class AuthRepository implements AuthStatusSource {
+abstract interface class AuthRepository {
   /// Sign in with email and password
   Future<AuthenticatedUserEntity> signInWithEmailAndPassword(String email, String password);
 
@@ -44,9 +43,4 @@ final class AuthRepositoryImpl implements AuthRepository {
     // await _dataSource.signOut();
     await _storage.clear();
   }
-
-  @override
-  Stream<AuthenticationStatus> get authStatus => _storage.getStream().map(
-        (user) => user.isAuthenticated ? AuthenticationStatus.authenticated : AuthenticationStatus.unauthenticated,
-      );
 }

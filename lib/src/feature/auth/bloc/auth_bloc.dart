@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lanars/src/core/utils/emitter_mixin.dart';
+import 'package:lanars/src/feature/auth/data/entity/user_entity.dart';
 import 'package:lanars/src/feature/auth/data/repository/auth_repository.dart';
-import 'package:lanars/src/feature/auth/logic/auth_interceptor.dart';
 
 part 'auth_event.dart';
 
@@ -24,28 +24,21 @@ final class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
         final _SignOut e => _signOut(e, emit),
       },
     );
-
-    // emit new state when the authentication status changes
-    authRepository.authStatus.map(($status) => AuthState.idle(status: $status)).listen(($state) {
-      if ($state != state) {
-        setState($state);
-      }
-    });
   }
 
   Future<void> _signOut(
     _SignOut event,
     Emitter<AuthState> emit,
   ) async {
-    emit(AuthState.processing(status: state.status));
+    emit(AuthState.processing(user: state.user));
 
     try {
       await _authRepository.signOut();
-      emit(const AuthState.idle(status: AuthenticationStatus.unauthenticated));
+      emit(AuthState.idle(user: UserEntity.notAuthenticated()));
     } on Object catch (e, stackTrace) {
       emit(
         AuthState.failure(
-          status: AuthenticationStatus.unauthenticated,
+          user: UserEntity.notAuthenticated(),
           error: e,
         ),
       );
@@ -57,18 +50,18 @@ final class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
     _SignInWithEmailAndPassword event,
     Emitter<AuthState> emit,
   ) async {
-    emit(AuthState.processing(status: state.status));
+    emit(AuthState.processing(user: state.user));
 
     try {
-      await _authRepository.signInWithEmailAndPassword(
+      final user = await _authRepository.signInWithEmailAndPassword(
         event.email,
         event.password,
       );
-      emit(const AuthState.idle(status: AuthenticationStatus.authenticated));
+      emit(AuthState.idle(user: user));
     } on Object catch (e, stackTrace) {
       emit(
         AuthState.failure(
-          status: AuthenticationStatus.unauthenticated,
+          user: UserEntity.notAuthenticated(),
           error: e,
         ),
       );
