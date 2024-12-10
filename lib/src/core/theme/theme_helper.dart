@@ -6,11 +6,11 @@ ThemeData _createThemeData(
     ThemeData(
       // useMaterial3: false,
       colorScheme: colorScheme,
-      appBarTheme: const AppBarTheme(
+      appBarTheme:  AppBarTheme(
         centerTitle: true,
         elevation: 0.0,
-        backgroundColor: Colors.transparent,
-        surfaceTintColor: Colors.transparent,
+        backgroundColor: colorScheme.background,
+        surfaceTintColor: colorScheme.background,
       ),
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(
