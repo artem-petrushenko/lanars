@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:lanars/src/feature/documents/widget/document_body.dart';
 import 'package:lanars/src/feature/documents/widget/document_drawer.dart';
 
 @RoutePage()
@@ -29,9 +30,7 @@ class DocumentScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: const Center(
-        child: Text('DocumentScreen'),
-      ),
+      body: const DocumentBody(),
     );
   }
 }

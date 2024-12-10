@@ -1,4 +1,5 @@
 import 'package:lanars/src/feature/auth/bloc/auth_bloc.dart';
+import 'package:lanars/src/feature/documents/data/repository/document_repository.dart';
 import 'package:lanars/src/feature/settings/bloc/settings_bloc.dart';
 
 /// {@template dependencies}
@@ -13,6 +14,7 @@ base class Dependencies {
   const Dependencies({
     required this.settingsBloc,
     required this.authBloc,
+    required this.documentRepository,
   });
 
   /// [SettingsBloc] instance, used to manage theme and locale.
@@ -20,6 +22,9 @@ base class Dependencies {
 
   /// [AuthBloc] instance, used to manage authentication.
   final AuthBloc authBloc;
+
+  /// [DocumentRepository] instance, used to manage documents.
+  final DocumentRepository documentRepository;
 }
 
 /// {@template composition_result}

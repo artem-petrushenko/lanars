@@ -86,8 +86,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: double.infinity,
                 child: FilledButton(
                   onPressed: () {
+                    FocusScope.of(context).unfocus();
                     if (_formKey.currentState!.validate()) {
-                      // _formKey.currentState!.save();
                       AuthScope.of(context).signInWithEmailAndPassword(
                         _emailController.text,
                         _passwordController.text,

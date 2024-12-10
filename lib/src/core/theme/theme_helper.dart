@@ -8,8 +8,11 @@ ThemeData _createThemeData(
       colorScheme: colorScheme,
       appBarTheme: const AppBarTheme(
         centerTitle: true,
+        elevation: 0.0,
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
       ),
-      inputDecorationTheme:  InputDecorationTheme(
+      inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(
           borderSide: BorderSide(
             color: colorScheme.onSurface,
@@ -20,7 +23,7 @@ ThemeData _createThemeData(
             color: colorScheme.primary,
           ),
         ),
-        enabledBorder: OutlineInputBorder(),
+        enabledBorder: const OutlineInputBorder(),
         errorBorder: OutlineInputBorder(
           borderSide: BorderSide(
             color: colorScheme.error,

@@ -6,6 +6,8 @@ import 'package:lanars/src/feature/auth/data/data_provider/auth_data_source.dart
 import 'package:lanars/src/feature/auth/data/data_provider/user_storage_sp.dart';
 import 'package:lanars/src/feature/auth/data/entity/user_entity.dart';
 import 'package:lanars/src/feature/auth/data/repository/auth_repository.dart';
+import 'package:lanars/src/feature/documents/data/data_provider/document_data_provider.dart';
+import 'package:lanars/src/feature/documents/data/repository/document_repository.dart';
 import 'package:lanars/src/feature/initialization/model/dependencies.dart';
 import 'package:lanars/src/feature/settings/bloc/settings_bloc.dart';
 import 'package:lanars/src/feature/settings/data/text_scale_datasource.dart';
@@ -61,9 +63,15 @@ final class CompositionRoot {
       authRepository: authRepository,
       user: user,
     );
+    final documentRepository = DocumentRepositoryImpl(
+      dataSource: DocumentDataSource(dio..options.headers = {
+        'Authorization': '2VZaQzayFmTwRHJAVE68zcphMPKU2zJXSLms0yEZyXVO3AnEILZySCg9'
+      }),
+    );
     return Dependencies(
       settingsBloc: settingsBloc,
       authBloc: authBloc,
+      documentRepository: documentRepository,
     );
   }
 
