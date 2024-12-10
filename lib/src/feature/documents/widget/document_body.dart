@@ -23,42 +23,46 @@ class DocumentBody extends StatelessWidget {
               context.read<DocumentBloc>().add(DocumentEvent.fetchPhotos(completer: completer));
               return completer.future;
             },
-            child: CustomScrollView(
-              slivers: [
-                if (state.isLoading && !state.hasData)
-                  const SliverFillRemaining(
-                    child: Center(
-                      child: CircularProgressIndicator(),
+            child: Scrollbar(
+              child: CustomScrollView(
+                slivers: [
+                  if (state.isLoading && !state.hasData)
+                    const SliverFillRemaining(
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    )
+                  else if (state.hasData)
+                    SliverPadding(
+                      padding: const EdgeInsets.all(16.0),
+                      sliver: SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            final photo = state.photos[index];
+                            final currentLetter =
+                                photo.photographer.isNotEmpty ? photo.photographer[0].toUpperCase() : '';
+                            final previousLetter = index > 0 && state.photos[index - 1].photographer.isNotEmpty
+                                ? state.photos[index - 1].photographer[0].toUpperCase()
+                                : '';
+                            return DocumentCart(
+                              url: photo.src.original,
+                              title: photo.photographer,
+                              subtitle: photo.alt,
+                              isShowLeather: currentLetter != previousLetter,
+                            );
+                          },
+                          childCount: state.photos.length,
+                        ),
+                      ),
+                    )
+                  else if (!state.isLoading && !state.hasData)
+                    const SliverToBoxAdapter(
+                      child: Center(
+                        child: Text('Empty'),
+                      ),
                     ),
-                  )
-                else if (state.hasData)
-                  SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final photo = state.photos[index];
-                        final currentLetter = photo.photographer.isNotEmpty
-                            ? photo.photographer[0].toUpperCase()
-                            : '';
-                        final previousLetter = index > 0 && state.photos[index - 1].photographer.isNotEmpty
-                            ? state.photos[index - 1].photographer[0].toUpperCase()
-                            : '';
-                        return DocumentCart(
-                          url: photo.src.original,
-                          title: photo.photographer,
-                          subtitle: photo.alt,
-                          isShowLeather: currentLetter != previousLetter,
-                        );
-                      },
-                      childCount: state.photos.length,
-                    ),
-                  )
-                else if (!state.isLoading && !state.hasData)
-                  const SliverToBoxAdapter(
-                    child: Center(
-                      child: Text('Empty'),
-                    ),
-                  ),
-              ],
+                ],
+              ),
             ),
           );
         },

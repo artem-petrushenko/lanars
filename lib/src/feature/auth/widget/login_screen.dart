@@ -84,24 +84,27 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               SizedBox(
                 width: double.infinity,
-                child: FilledButton(
-                  onPressed: () {
-                    FocusScope.of(context).unfocus();
-                    if (_formKey.currentState!.validate()) {
-                      AuthScope.of(context).signInWithEmailAndPassword(
-                        _emailController.text,
-                        _passwordController.text,
-                      );
-                    }
-                  },
-                  child: DependenciesScope.of(context).authBloc.state.isLoading
-                      ? SizedBox.square(
-                          dimension: 24.0,
-                          child: CircularProgressIndicator(
-                            color: Theme.of(context).colorScheme.onPrimary,
-                          ),
-                        )
-                      : const Text('Sign in'),
+                child: IgnorePointer(
+                  ignoring: DependenciesScope.of(context).authBloc.state.isLoading,
+                  child: FilledButton(
+                    onPressed: () {
+                      FocusScope.of(context).unfocus();
+                      if (_formKey.currentState!.validate()) {
+                        AuthScope.of(context).signInWithEmailAndPassword(
+                          _emailController.text,
+                          _passwordController.text,
+                        );
+                      }
+                    },
+                    child: DependenciesScope.of(context).authBloc.state.isLoading
+                        ? SizedBox.square(
+                            dimension: 24.0,
+                            child: CircularProgressIndicator(
+                              color: Theme.of(context).colorScheme.onPrimary,
+                            ),
+                          )
+                        : const Text('Sign in'),
+                  ),
                 ),
               ),
             ],
