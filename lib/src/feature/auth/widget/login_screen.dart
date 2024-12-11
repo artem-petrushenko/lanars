@@ -40,6 +40,14 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
+  void _resetValidation() {
+    final oldEmailValue = _emailController.value;
+    final oldPasswordValue = _passwordController.value;
+    _formKey.currentState!.reset();
+    _emailController.value = oldEmailValue;
+    _passwordController.value = oldPasswordValue;
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
@@ -81,6 +89,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 emailController: _emailController,
                 passwordController: _passwordController,
                 enable: !DependenciesScope.of(context).authBloc.state.isLoading,
+                onTap: () {
+                  _resetValidation();
+                },
               ),
               SizedBox(
                 width: double.infinity,

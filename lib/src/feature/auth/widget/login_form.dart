@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lanars/src/feature/auth/widget/email_text_field.dart';
 import 'package:lanars/src/feature/auth/widget/password_text_field.dart';
 
-class LoginForm extends StatefulWidget {
+class LoginForm extends StatelessWidget {
   const LoginForm({
     super.key,
     required this.formKey,
@@ -12,6 +12,7 @@ class LoginForm extends StatefulWidget {
     this.enable = true,
     this.onChanged,
     this.onTap,
+    this.errorText,
   });
 
   final GlobalKey formKey;
@@ -21,31 +22,28 @@ class LoginForm extends StatefulWidget {
   final bool enable;
   final void Function(String)? onChanged;
   final void Function()? onTap;
+  final String? errorText;
 
-  @override
-  State<LoginForm> createState() => _LoginFormState();
-}
-
-class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     return Form(
-      key: widget.formKey,
-      autovalidateMode: AutovalidateMode.disabled,
+      key: formKey,
       child: AutofillGroup(
         child: Column(
           children: [
             EmailTextField(
-              controller: widget.emailController,
-              readOnly: widget.readOnly,
-              enable: widget.enable,
-
+              controller: emailController,
+              readOnly: readOnly,
+              enable: enable,
+              onTap: onTap,
+              errorText: errorText,
             ),
             PasswordTextField(
-              controller: widget.passwordController,
-              readOnly: widget.readOnly,
-              enable: widget.enable,
-              onTap: widget.onTap,
+              controller: passwordController,
+              readOnly: readOnly,
+              enable: enable,
+              onTap: onTap,
+              errorText: errorText,
             ),
           ],
         ),

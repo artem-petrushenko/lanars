@@ -5,7 +5,7 @@ import 'package:lanars/src/core/utils/validator/validator.dart';
 /// {@template password_text_field}
 /// _PasswordTextField widget
 /// {@endtemplate}
-class PasswordTextField extends StatefulWidget {
+class PasswordTextField extends StatelessWidget {
   /// {@macro password_text_field}
   const PasswordTextField({
     super.key,
@@ -14,6 +14,7 @@ class PasswordTextField extends StatefulWidget {
     this.enable = true,
     this.onChanged,
     this.onTap,
+    this.errorText,
   });
 
   final TextEditingController controller;
@@ -21,26 +22,17 @@ class PasswordTextField extends StatefulWidget {
   final bool enable;
   final void Function(String)? onChanged;
   final void Function()? onTap;
-
-  @override
-  State<PasswordTextField> createState() => _PasswordTextFieldState();
-}
-
-class _PasswordTextFieldState extends State<PasswordTextField> {
-  @override
-  void dispose() {
-    super.dispose();
-  }
+  final String? errorText;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 92.0,
       child: TextFormField(
-        controller: widget.controller,
+        controller: controller,
         obscureText: true,
-        readOnly: widget.readOnly,
-        enabled: widget.enable,
+        readOnly: readOnly,
+        enabled: enable,
         validator: Validator.apply(
           context,
           [
@@ -54,13 +46,13 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
           ],
         ),
         autofillHints: const [AutofillHints.password],
-        decoration: const InputDecoration(
+        decoration: InputDecoration(
           labelText: 'Password',
+          errorText: errorText,
         ),
-        onChanged: widget.onChanged,
+        onChanged: onChanged,
         textInputAction: TextInputAction.next,
-        onTap: widget.onTap,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
+        onTap: onTap,
       ),
     );
   }
